@@ -7,7 +7,7 @@ import Mathlib
 /-- Let $a$ and $b$ be two positive integers. Prove that the integer  $$ a^{2}+\left\lceil\frac{4 a^{2}}{b}\right\rceil $$  is not a square. (Here $\lceil z\rceil$ denotes the least integer greater than or equal to z.) (Russia) -/
 theorem number_theory_23923 {a b : ℤ} (ha : 0 < a) (hb : 0 < b) :
     ¬IsSquare (a ^ 2 + ⌈(4 * a ^ 2 / b : ℚ)⌉) := by
-  -- Arguing indirectly, assume that  $$ a^{2}+\left\lceil\frac{4 a^{2}}{b}\right\rceil=(a+k)^{2}, \quad \text { or } \quad\left\lceil\frac{(2 a)^{2}}{b}\right\rceil=(2 a+k) k $$
+  -- Arguing indirectly, assume that $$ a^{2}+\left\lceil\frac{4 a^{2}}{b}\right\rceil=(a+k)^{2}, \quad \text { or } \quad\left\lceil\frac{(2 a)^{2}}{b}\right\rceil=(2 a+k) k $$
   by_contra h
   obtain ⟨k', h⟩ := h
   wlog k_pos : 0 ≤ k'
