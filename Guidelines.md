@@ -18,4 +18,4 @@
 
     A formalization of a solution following these guidelines can be found in the folder `/AnnotationExamples/Solutions`
 
-4. Currently, we are able to compensate for 15 minutes per statement annotation and 1.5 hours per solution annotation. You are encouraged but certainly not expected to keep working on the annotations past these time-frames if that may result in better data quality collected. Please keep these time constraints in mind and budget your time efficiently, while working on the annotations.
+4. Currently, we are able to compensate for **15 minutes** per statement annotation and **90 minutes** per solution annotation. You are encouraged but certainly not expected to keep working on the annotations past these time-frames if that may result in better data quality collected. Please keep these time constraints in mind and budget your time efficiently, while working on the annotations.
