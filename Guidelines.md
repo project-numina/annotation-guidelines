@@ -5,6 +5,18 @@
 2. If tasked with formalization of the solution, please verify the informal solution in Markdown. If incorrect or imprecise, please add your own edited Markdown solution on the web platform before proceeding to the Lean formalization.
 
 3. If tasked with formalizing the solution, we ask the annotators to generate a **self-contained** solution of the problem using imports from Mathlib. In particular, please do not use auxiliary `def` and `lemma` statements when formalizing the solution.
+    
+    If you *must* use auxiliary `def` or `lemma` in your formalization, please wrap your submission in a namespace following the convention `(problem_type)_(problem_number)`. An example of this is given in the `/AnnotationExamples/Statements/namespace_example.lean` file, even though the `def` used could still easily be inlined :
+    ```
+    import Mathlib
+    open Real Set
+    namespace algebra_9173
+
+    noncomputable def average_range (f : ℝ → ℝ) (x k : ℝ) : ℝ := (f (x + k) - f x) / k
+
+    end algebra_9173
+    open algebra_9173
+    ```
 
     Additionally, we require the annotators to intersperse steps in the informal solution between Lean 4 code snippets as comments, aligning the informal and the formal solutions. If the formal solution is significantly more detailed, do not hesitate to add extra comments. 
 
