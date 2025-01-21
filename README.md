@@ -1,4 +1,4 @@
-# annotation-examples
+# annotation-guidelines
 
 This repository contains a comprehensive set of guidelines to follow while formalizing problem statements and solutions for Project Numina on our internal platform https://app.projectnumina.ai/. 
 
