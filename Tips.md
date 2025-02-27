@@ -27,6 +27,6 @@ example (a b : Int) : (a / b) / (c / d) = (a * d) / (b * c) := by
   push_cast
   ring_nf
   ...
-usi
+```
 Similary, when dealing with subtraction of natural numbers it often easier to first lift into `Int` using `zify` and then use `Nat.cast_sub` and `push_cast`.
 Additionally `rify` can be used to lift problems into `Real`.
