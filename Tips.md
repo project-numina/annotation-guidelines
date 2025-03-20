@@ -30,3 +30,8 @@ example (a b : Int) : (a / b) / (c / d) = (a * d) / (b * c) := by
 ```
 Similary, when dealing with subtraction of natural numbers it often easier to first lift into `Int` using `zify` and then use `Nat.cast_sub` and `push_cast`.
 Additionally `rify` can be used to lift problems into `Real`.
+
+
+## inspecting tactics
+
+A lot of the time automation tactics like `linarith, omega` will use very helpful lemmas. Putting `show_term` before a tactic can be used to see what a tactic is doing under the hood.
