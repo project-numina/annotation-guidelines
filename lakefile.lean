@@ -8,7 +8,9 @@ package "annotation-examples" where
   ]
   -- add any additional package configuration options here
 
-require "leanprover-community" / "mathlib" @ git "20c73142afa995ac9c8fb80a9bb585a55ca38308"
+require mathlib from git
+  "https://github.com/leanprover-community/mathlib4.git" @ "v4.15.0"
+
 
 @[default_target]
 lean_lib «AnnotationExamples» where
