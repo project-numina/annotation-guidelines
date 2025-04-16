@@ -1,33 +1,59 @@
-1. Using pre-generated auto-formalization output for this solution and paste it into the Lean 4 file after the comments. If incorrect, please correct or fully rewrite the statement in Lean. We will ask you to evaluate its correctness using **TRUE/FALSE** outputs after the annotation is finished.
 
-    Examples of autoformalizations (and their corrected versions) are given in the `/AnnotationExamples/Statements` folder
+# Numina Guidelines for formalizing Olympiad-style Problems in Lean
 
-2. If tasked with formalization of the solution, please verify the informal solution in Markdown. If incorrect or imprecise, please add your own edited Markdown solution on the web platform before proceeding to the Lean formalization.
+The goal of this document is to help annotators provide useful annotated Lean solutions to Olympiad problems for use in Numina's datasets.
+The ideal Lean4 proof is based on a provided human-understandable informal proof, and intersperses the steps of the informal solution within the Lean 4 code as comments, aligning the informal and the formal solutions. If the formal solution is significantly more detailed, do not hesitate to add extra comments.
 
-3. If tasked with formalizing the solution, we ask the annotators to generate a **self-contained** solution of the problem using imports from Mathlib. In particular, please do not use auxiliary `def` and `lemma` statements when formalizing the solution.
-    
-    If you *must* use auxiliary `def` or `lemma` in your formalization, please wrap your submission in a namespace following the convention `(problem_type)_(problem_number)`. An example of this is given in the `/AnnotationExamples/Statements/namespace_example.lean` file, even though the `def` used could still easily be inlined :
-    ```
-    import Mathlib
-    open Real Set
-    namespace algebra_9173
+Currently, we are able to compensate for **15 minutes** per statement annotation and **90 minutes** per solution annotation. You are encouraged but certainly not expected to keep working on the annotations past these time-frames if that may result in better data quality collected. Please keep these time constraints in mind and budget your time efficiently, while working on the annotations.
 
-    noncomputable def average_range (f : ℝ → ℝ) (x k : ℝ) : ℝ := (f (x + k) - f x) / k
+The formal proofs should contain **all key mathematical reasoning steps** from the informal solutions, but we are aware that the time-constraint will require some problems to be formalized only *partially*. To provide such *partial* solutions, we expect annotators to use `have` and `suffices` statements. These should be appropriately commented by using an appropriate snippet taken from the informal proof or an annotator description. Naturally, some proofs of these sub-statements will be completed only partially and contain `sorry` tactics. For this, we provide a quick check-list to follow before using a `sorry` within a proof.
 
-    end algebra_9173
-    open algebra_9173
-    ```
+i. Does there exist a valid Lean proof from the current goal state? If **not** certain, please proceed with the formalization. Else, continue with the check-list.
 
-    Additionally, we require the annotators to intersperse steps in the informal solution between Lean 4 code snippets as comments, aligning the informal and the formal solutions. If the formal solution is significantly more detailed, do not hesitate to add extra comments. 
+ii. Is the proof from the current goal state require mathematically non-trivial reasoning? If **not**, please continue with the formalization. Else, continue with the check-list.
 
-    The formal proofs should contain **all key mathematical reasoning steps** from the informal solutions but we are aware that the time-constraint will require some problems to be formalized only *partially*. To provide such *partial* solutions, we expect annotators to use `have` and `suffices` statements. These should be appropriately commented by using an appropriate snippet taken from the informal proof or an annotator description. Naturally, some of proofs of these sub-statements will be completed only partially and contain `sorry` tactics. For this, we provide a quick check-list to follow before using a `sorry` within a proof.
+iii. Is the proof from the current goal require only routine and tedious proof-steps, which cannot be completed within 2-3 lines of Lean code. If **yes**, then `sorry` may be used here to save time. Else, please provide a short-proof from the current goal-state.
 
-    i. Does there exist a valid Lean proof from the current goal state? If **not** certain, please proceed with the formalization. Else, continue with the check-list.
+## The Structure of the Lean File
 
-    ii. Is the proof from the current goal state require mathematically non-trivial reasoning? If **not**, please continue with the formalization. Else, continue with the check-list.
+Lean code should import Mathlib via the command `import Mathlib` rather than by importing several specific files.
 
-    iii. Is the proof from the current goal require only routine and tedious proof-steps, which cannot be completed within 2-3 lines of Lean code. If **yes**, then `sorry` may be used here to save time. Else, please provide a short-proof from the current goal-state.
+The natural-language statement of the problem should be placed in a doc-string comment immediately before the statement of the theorem.
 
-    A formalization of a solution following these guidelines can be found in the folder `/AnnotationExamples/Solutions`
+It is **strongly discouraged** to use auxiliary definitions and lemmas for the formalization. If **absolutely** needed, you may use them via the **def/lemma** keywords to answer a multiple-choice question, a function/predicate, a common lemma, etc. Such statements should also have a header doc-string in `/-- -/` brackets.
 
-4. Currently, we are able to compensate for **15 minutes** per statement annotation and **90 minutes** per solution annotation. You are encouraged but certainly not expected to keep working on the annotations past these time-frames if that may result in better data quality collected. Please keep these time constraints in mind and budget your time efficiently, while working on the annotations.
+If you do use auxiliary `def` or `lemma` in your formalization, please wrap your submission in a namespace following the convention `(problem_type)_(problem_number)`. An example of this is given in the [`/AnnotationExamples/Statements/namespace_example.lean` file](./AnnotationExamples/Statements/namespace_example.lean), along with an example of how we prefer these auxiliary definitions should be included - as hypotheses to the theorem in question.
+
+## Choice of Numeric Types
+
+There are often a variety of ways to formalize the types of numeric values in Olympiad problems. For example, a problem that references “positive integers” might be formalized using:
+
+* `(n : ℕ+)`  
+* `(n : ℕ)` with a hypothesis `(n_pos : 0 < n)`  
+* `(n : ℤ)` with a hypothesis `(n_pos : 0 < n)`
+
+We offer the following guidance:
+
+* Attempt to suit the type to the purposes of the problem. For example  
+  * If a number is a “positive integer”, but subtractions of or from the value occur in the problem, then it will likely be convenient to formalize this with `ℤ`  
+  * On the other hand, if the problem involves exponentiation by this value, it is likely convenient to use `ℕ` so that underlying type will be the same as the type of the base.  
+  * If both subtraction and exponentiation occur, then it might be necessary to work with both types. This can be done by using for the base type in the problem statement, and casting to an integer, using `zify` when necessary,
+    * e.g. `(n : ℕ) (h : ((n : ℤ) - 1) ^ n)`  
+* Avoid using types other than `ℕ`, `ℤ`, `ℚ`, `ℝ`, and `ℂ`  
+  * An exception to this might be if the type appears in the domain of a function, in which case, it might be useful to use `ℕ+` to avoid discrepancy about the existence of certain elements of the domain.
+
+## Choice of Tactics
+
+Lean provides a variety of tactics of varying strength. In some cases, it may even be possible to let a tactic undertake a massive case search to help resolve a goal or subgoal. It is important to note that we are interested in approaches that synergize well with natural language, as such we **should not use tactics that rely overly on computation to resolve goals**. As a rule of thumb, ask yourself: “Is the mode of reasoning being used by this tactic in accordance with the natural language explanation of the proof that a human can think through in their own head?”. If not, then rather than use a short, computation-heavy tactic, it is likely better to expand out a more nuanced step-by-step understanding of the steps of the proof.
+
+Some more notes and tips about particular tactics can be found in our [Tactic Cheat Sheet](./FormalizationResources/TacticCheatSheet.md).
+
+## Commonly used `mathlib` definitions to know
+
+* `IsLeast`/`IsGreatest`: These definitions allow you to assert that a particular value is the minimum / maximum of a set. They are often used in problems that involve finding the minimum or maximum value satisfying some property.
+* `SimpleGraph`: Some problems involve graphs, or can be stated most naturally in terms of graphs. The `SimpleGraph` definition is a good way to formalize these problems, as it allows you to work with the graph structure directly.
+* `EuclideanSpace ℝ (Fin 2)`: Geometric problems are often stated in terms of the Euclidean Plane - this snippet is the conventional way to define this space.
+
+## Other Style References
+
+These guidelines are adapted from, but more specific than, [Joseph Myers’ guidelines for IMO formalization](https://github.com/jsm28/IMOLean). See also [this earlier document](./OldGuidelines.md). In addition to the notes in this document, Lean code appearing in annotations should also adhere to the [mathlib4 style guidelines](https://leanprover-community.github.io/contribute/style.html). Examples can be found in the [Annotation Examples folder](https://github.com/project-numina/annotation-guidelines/tree/master/AnnotationExamples).
