@@ -42,9 +42,26 @@ We offer the following guidance:
 * Avoid using types other than `ℕ`, `ℤ`, `ℚ`, `ℝ`, and `ℂ`  
   * An exception to this might be if the type appears in the domain of a function, in which case, it might be useful to use `ℕ+` to avoid discrepancy about the existence of certain elements of the domain.
 
-## Choice of Tactics
+## Computation-Heavy Tactics
 
-Lean provides a variety of tactics of varying strength. In some cases, it may even be possible to let a tactic undertake a massive case search to help resolve a goal or subgoal. It is important to note that we are interested in approaches that synergize well with natural language, as such we **should not use tactics that rely overly on computation to resolve goals**. As a rule of thumb, ask yourself: “Is the mode of reasoning being used by this tactic in accordance with the natural language explanation of the proof that a human can think through in their own head?”. If not, then rather than use a short, computation-heavy tactic, it is likely better to expand out a more nuanced step-by-step understanding of the steps of the proof.
+Lean provides a variety of tactics of varying strength. 
+In some cases, it may even be possible to let a tactic such as `interval_cases`, `decide`, or `norm_num` undertake a large case search or numerical computation,
+and this can often be the most efficient and concise way to close a goal. 
+At the same time, it is important to note that computations in the Lean tactic mode run slower than in most other programming languages, 
+and if we allow many computation-heavy proofs in a large dataset, they can easily come to dominate the compile-time of the dataset. 
+Additionally, we are interested in approaches that synergize well with natural language, and with the way a human might produce a proof.
+A computation-heavy tactic can leave the proof in a state where a human reader is not convinced of the correctness without live access to feedback from Lean. 
+But on the other hand, a more verbose explanation of a fact that would otherwise be proved by a single tactic can direct a reader's attention away from the key parts of a proof.
+
+Given these considerations, it can be an important to decide whether a particular goal is best dealt with by a concise computation-heavy tactic or a more verbose proof that avoids computation.
+Use the following rules of thumb when choosing whether to use a concise, computation-heavy tactic:
+
+* For computations that require only 10 or fewer cases or arithmetic operations (e.g. to prove the goal `9^9 % 10 = 9`), it is fine to use a single tactic.
+* For computations that require ~100 operations, it might be fine to use a computation-heavy tactic, depending on whether or not it significantly increases the total compile time of the proof. 
+  * In these cases, the code should be commented with an explanation of the tactic and why we expect that it will finish in a reasonable amount of time.
+* Computations that require thousands, miliions or more operations should be avoided.
+  * Typically, in the context of an exam problem, there will be some other trick that allows the human solver to draw the conclusion that the computation would provide. Try to formalize the reasoning behind this trick in explicit Lean code.
+  * For example, to prove a goal like `9^(9^9) % 10 = 9`, one could perhaps invoke a theorem saying that `9 = (-1 : ZMod 10)` to simplify things.
 
 Some more notes and tips about particular tactics can be found in our [Tactic Cheat Sheet](./FormalizationResources/TacticCheatSheet.md).
 
