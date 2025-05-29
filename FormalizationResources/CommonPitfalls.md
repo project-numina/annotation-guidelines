@@ -1,5 +1,7 @@
 # Common Pitfalls
 
+There are a number of pitfalls one can fall into when formalizing olympiad problems in Lean. This document mentions some to be avoided. Also useful might be [this document](https://github.com/nielsvoss/lean-pitfalls) from Niels Voss, listing other pitfalls for mathematical formalization and for Lean in general.
+
 ## Avoiding Junk Values
 
 A common formalization error among beginners (and even experts!) involves "junk values". Functions in Lean return values even on inputs that would normally be considered undefined or outside the domain. Two examples of this are truncated subtraction (i.e. `2 - 5 = 0`) and floor division (i.e. `5 / 2 = 2`) of naturals. This can lead to formalizations that do not match the intended meaning of the underlying problem. We recommend double-checking the types in the editor to ensure they are what is expected.
